@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import TodoItem from './TodoItem.js'
+import Test from './Test.js'
 import './style.css'
 // 一个组件返回的内容必须有一个容器包含,但如果有需求不希望包含的容器标签输出到html 16的版本t提供了一个占位符 Fragment
 // react 响应式框架
@@ -13,6 +14,16 @@ class Todolist extends Component {
         this.handleInputChange = this.handleInputChange.bind(this)
         this.handleClickAdd = this.handleClickAdd.bind(this);
         this.handleClickDel = this.handleClickDel.bind(this);//绑定在jsx的html代码里会对性能有些影响，比如多个的时候会重复传人this
+    
+        // refs 提供一个返回真实dom操作，一般情况不要用，除非有特殊需要，如做动画可能需要获取下dom位置等等
+        this.ul = React.createRef()
+        // 通过this.ul.current 返回真实dom
+        // 16.3之前可以用回调的写法，现在也行
+        /*
+        <div ref={(div)=>this.div=div}></div>
+        t通过this.div 就是div
+        */
+        
     }
 
     handleInputChange(e) {
@@ -53,7 +64,9 @@ class Todolist extends Component {
         this.setState((prevState) => ({  // setState 可以接收一个 prevState 参数 修改之前的状态 可以避免无意修改state
             list: [...prevState.list, prevState.inputValue], // ... es6扩展运算符，将数组转化为逗号分隔
             inputValue: ""
-        }))
+        }),()=>{
+            console.log(this.ul.current.children.length) // 设置set是异步，所以要写进回调里，才是真确的数据
+        })
     }
 
     handleClickDel(index) {
@@ -74,6 +87,7 @@ class Todolist extends Component {
 
     getTodoItem() {
         return this.state.list.map((item, index) => {
+
             return (
                 <TodoItem
                     key={index}
@@ -83,6 +97,7 @@ class Todolist extends Component {
                 />
             )
         })
+        // key 是个唯一值，也不是随便生成，目的是要让新老虚拟dom数组比较时候能快速索引，用于底层虚拟dom做diff使用，一般情况下用index，如果是有排序删减这种不建议，在数据源头为每个数据定制一个id比较靠谱
     }
 
     render() {
@@ -99,7 +114,7 @@ class Todolist extends Component {
                     />
                     <button onClick={this.handleClickAdd}>提交</button>
                 </div>
-                <ul>
+                <ul ref={this.ul}>
                     {
                         this.getTodoItem()
                     }
@@ -111,6 +126,9 @@ class Todolist extends Component {
                     // 如果不需要转义 ，希望直接显示html 可以 使用属性 dangerouslySetInnerHTML={{__html:item}}
                     // 如果对label标签 使用for定位input光标，不能直接使用for 原因js for是循环的意思，要用htmlFor
                 */}
+                {/* <Test 
+                    content={this.state.inputValue}
+                /> */}
             </Fragment>
             //</div>
 
