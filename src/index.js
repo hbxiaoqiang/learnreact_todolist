@@ -5,7 +5,7 @@ import Todolist from './Todolist';
 ReactDOM.render(<Todolist />, document.getElementById('root'));
 
 /*
-//todolist衍生思考
+//todolist衍生思考总结
 1，声明式开发 ，
    直接操作dom成为命令式开发，比如大部分代码在做dom操作，比如jq 每一步都关心dom操作
    react算是声明式开发，指操作数据为主，关注数据的变化，不直接操作dom，可以帮忙节约dom的操作代码
@@ -27,4 +27,84 @@ ReactDOM.render(<Todolist />, document.getElementById('root'));
     如果组件的出现复杂的传值，react不提供方法，交给插件做 如 Redux
 
  6 函数式编程
-    */
+
+
+ 7 react 渲染流程，当 state 或 props 改变的时候 render()就会被执行一次,当父组件的render执行的时候，其子组件的render也会被执行
+    
+ 8 虚拟dom 的概念 简单说就 一个 数组结构js对象来描述真实dom ，核心操作dom会比操作js对象更消耗性能
+    1，state 数据
+    2，jsx 模版
+    3，数据 + 模版 结合 生产真实dom显示
+    4，state 发生改变
+    5，数据 + 模版 结合 生产真实dom显示，替换原来dom
+    以上步骤的缺陷 第一次生产一个完成dom，第二又生产一个完整dom 在替换，因为每一次都是完整生产替换，消耗性能
+    改5 数据 + 模版 结合 生产真实dom显示，不替换
+    6 用新的dom 和 原始dom 对比 找出差异
+    7 找出差异 只用新的差异元素进行替换 
+    以上 不涉及dom全部的替换，只有局部替换性能可以得以提升，这个类似于ag1的方案，缺陷，消耗了比对的性能，所以性能的提升不太明显
+    
+   react 中
+
+   1，state 数据
+   2，jsx 模版
+   3,数据 + 模版 生成虚拟dom
+      ['div',{id:'abc'},['span',{},'hello']]
+   4，用用虚拟dom 生产真实dom显示
+      <div id='abc'><span>hello</span><div>
+  
+   5 state 发生变化（state 实际是异步的，具体也是为了提升性能，把间隔时间很短的多次state改变操作合并为一个操作 ）
+   6 数据+模版 生成新的虚拟dom （极大提升性能，因为js生成js对象性能消耗很小）
+   7 比较原始虚拟dom和新的虚拟dom 找到区别 （极大提升性能，js和js对比差异，之前的dom和dom对比，
+      差异diff算法把，采用的是同层比对，发现一层之后后面就不比了，如果是数组的话会要求一个每个list有一个key）
+   8.直接生成对应dom，改变span中的内容
+
+   虚拟dom的优点
+   1 性能提升
+   2 跨平台端实现的可能，出现了 react native ；
+
+
+   9 关于16.8（相当新）以后支持的hook写法，react目前的官网部分案例都是用的hook写法，可以看出可能会推广
+   这种写法看起来更简单，而且this指向也没有那么复杂， 但是建议学习的时候还是使用通用的写法：class写法，
+   官方已经明确表示2种写法之后的版本都会存在，class写法能向前兼容，而且目前大多数实际项目应该都是class写法，只是
+   以后如果出现hook写法的项目，自己要看的懂就行了
+
+   hook写法如下：
+   import React, { useState } from 'react';
+   function Example() {
+  // 声明一个新的叫做 “count” 的 state 变量
+      const [count, setCount] = useState(0);
+
+      return (
+      <div>
+         <p>You clicked {count} times</p>
+         <button onClick={() => setCount(count + 1)}>
+         Click me
+         </button>
+      </div>
+      );
+   }
+
+   class写法：
+   import React, from 'react';
+   class Example extent React.Component{
+      constructor(props){
+         super(props);
+         this.state={
+            count:0
+         }
+      }
+      render(){
+         <div>
+         <p>You clicked {count} times</p>
+         <button onClick={() =>{
+            this.setState(()=>({
+               count:this.state.count+1
+            })
+         }}>
+         Click me
+         </button>
+      </div>
+      }
+   }
+
+ */
