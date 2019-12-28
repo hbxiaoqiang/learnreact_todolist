@@ -61,7 +61,6 @@ ReactDOM.render(<Todolist />, document.getElementById('root'));
    虚拟dom的优点
    1 性能提升
    2 跨平台端实现的可能，出现了 react native ；
-<<<<<<< HEAD
 
 
    9 关于16.8（相当新）以后支持的hook写法，react目前的官网部分案例都是用的hook写法，可以看出可能会推广
@@ -108,6 +107,4 @@ ReactDOM.render(<Todolist />, document.getElementById('root'));
       }
    }
 
-=======
->>>>>>> 5d95f16af5ec7996b492dd6f29ab809797ce34b5
  */
