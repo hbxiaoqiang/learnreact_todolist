@@ -130,6 +130,7 @@ class Todolist extends Component {
 
     getTodoItem() {
         return this.state.list.map((item, index) => {
+
             return (
                 <TodoItem
                     key={index}
