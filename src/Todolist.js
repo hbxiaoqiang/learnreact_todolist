@@ -69,6 +69,20 @@ class Todolist extends Component {
 
     //end */
 
+    componentDidMount(){
+        //使用了一个网站easy mock 的返回数据 来模拟各种数据，有其他更强大的一些工具，暂时不在现在研究了
+        let url = 'https://www.easy-mock.com/mock/5e0a0d18cdc33866251c4a9f/example';
+        
+        axios.get(url+'/list').then((data)=>{
+            //console.log(data.data.list)
+            this.setState(()=>({
+                list:data.data.list
+            }))
+             }).catch((e)=>{
+            alert('失败')
+         })
+    }
+
     handleInputChange(e) {
         //this.state.inputValue = e.target.value 改变不能这么写，
         //1，this指向有问题，这个样子this指向的是undfinde,需要改变指向
